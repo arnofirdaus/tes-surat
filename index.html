@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<!-- bootstrap 4 -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+	<!-- select 2 -->
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+</head>
+<body>
+	<form name="surat" class="container pt-5">
+		<div class="row">
+			<div class="col-6">
+				<h5>KIRIM</h5>
+				<hr>
+
+				<div class="form-group row">
+					<label class="col-5 text-right">Unit Kerja <span class="text-danger">*</span></label>
+					<select class="select2 form-control col-7 w-100" name="state" id="select-unitkerja">
+						<option value="">Pilih</option>
+					</select>
+				</div>
+				<div class="form-group row">
+					<label class="col-5 text-right">Jabatan <span class="text-danger">*</span></label>
+					<select class="select2 form-control col-7 w-100" name="state" id="select-jabatan" >
+						<option value="">Pilih</option>
+					</select>
+				</div>
+				<div class="form-group row">
+					<label class="col-5 text-right">Pegawai <span class="text-danger">*</span></label>
+					<input type="text" readonly class="form-control col-7" id="text-pegawai">
+				</div>
+				<div class="form-group row">
+					<label class="col-5 text-right">Redaksi <span class="text-danger">*</span></label>
+					<select class="form-control col-7 w-100" name="state" id="select-redaksi" >
+						<option value="asli">Asli</option>
+						<option value="tembusan">Tembusan</option>
+					</select>
+				</div>
+				<div class="row mb-3">
+					<button class="btn btn-primary offset-5" type="button" onclick="addKirim()">
+						Simpan
+					</button>
+				</div>
+
+				<table class="table table-stripped" id="table-kirim">
+					<thead>
+						<tr>
+							<th width="50">#</th>
+							<th>Jabatan</th>
+							<th>Pegawai</th>
+							<th>Redaksi</th>
+							<th width="50">Hapus</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="4" class="text-center">Data kosong</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-6">
+				<h5>FILE SURAT</h5>
+				<hr>
+				
+				<div >
+					<button type="button" class="btn btn-primary" id="select-file" onclick="$('#myInput').click();">Pilih File</button>
+				</div>
+				<input name="myInput" id="myInput" type="file" style="visibility:hidden" accept=".pdf"/>
+				<table class="table table-stripped" id="table-file">
+					<thead>
+						<tr>
+							<th width="50">#</th>
+							<th>File</th>
+							<th width="50">Lihat</th>
+							<th width="50">Hapus</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="4" class="text-center">Data kosong</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-12 text-right">
+				<button class="btn btn-success">
+					Kirim
+				</button>
+				<button class="btn btn-warning text-white">
+					Reset
+				</button>
+			</div>
+		</div>
+	</form>
+</body>
+
+<script>
+	var arrKirim = []
+	var arrFile = []
+	var unitkerja = [
+		{ 
+			id: 0, text: "Tata Naskah dan Kearsipan", 
+			jabatan: [
+				{ id: 1, text: "Kepala Subbagian Tata Persuratan", pegawai: "Wahyuningtyas Kusuma Dewi, S.Si" },
+				{ id: 2, text: "Kepala Subbagian Kearsipan", pegawai: "Ika Dini Haryanti, S.Kom."},
+				{ id: 3, text: "PPNPN", pegawai: "Indira Suri Azarine" },
+			]
+		},
+		{
+			 id: 1, text: "Rumah Tangga dan Perlengkapan",
+			 jabatan: [
+				{ id: 4, text: "Kepala Bagian Rumah Tangga dan Perlengkapan", pegawai: "Osman Affan, S.Sos., M.M." },
+				{ id: 5, text: "Kepala Subbagian Pengamanan dan Rumah Tangga", pegawai: "Danang Dwi Hatmoko, S.Kom."},
+				{ id: 6, text: "PPNPN", pegawai: "INDIRA SURI AZARINE", pegawai: "Marsha Aulia" },
+			 ]
+		},
+		{
+			id: 2, text: "Bagian Pengadaan Barang/Jasa",
+			jabatan: [
+				{ id: 7, text: "Kepala Bagian Pengadaan Barang/Jasa", pegawai: "Hatta Firman Syah, S.ST, M.M." },
+				{ id: 8, text: "Pengelola Pengadaan Barang/Jasa Pertama", pegawai: "Nuraeni Chasanah, S.Kom."},
+				{ id: 9, text: "Pengadministrasi Umum", pegawai: "Jajuli Dadang Hendrawan" },
+			 ]	
+		},
+	]
+	
+	var idxFile = 0
+
+	$(document).ready(function() {
+		
+		$('#select-unitkerja').select2({
+			data: unitkerja
+		});
+		
+		$('#select-unitkerja').on('change', function(){
+			
+			$('#select-jabatan').empty()
+			$('#select-jabatan').append("<option value=''>Pilih</option>")
+			$('#select-jabatan').select2({
+				data: unitkerja[this.value].jabatan
+			});
+		})
+
+		
+		$('#select-jabatan').on('change', function(){
+			var pegawai = $('#select-jabatan').select2('data')[0].pegawai
+
+			$('#text-pegawai').val(pegawai)
+		})
+
+		$('#myInput').change(function(){
+			var file = document.forms['surat']['myInput'].files[0];
+
+			console.log(this.files[0]);
+			if(file.name != ''){
+				idxFile++
+
+				readURL(this)
+
+				var content = '';
+
+				content += 
+				`<tr id="file-${idxFile}">
+					<td>${arrFile.length + 1}</td>
+					<td>${file.name}</td>
+					<td><a href="#" type="button" class="btn" target="_blank">Lihat</button></td>
+					<td><button type="button" class="btn" onclick="removeFile(${idxFile})">Hapus</button></td>
+				</tr>`
+						
+				if(arrFile.length == 0 ){
+					$('#table-file tbody').empty()
+				}
+				arrFile.push(idxFile)
+				$('#table-file tbody').append(content)
+			}
+		})
+
+	});
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			
+			reader.onload = function(e) {
+				console.log(e.target);
+			}
+			
+			reader.readAsDataURL(input.files[0]); // convert to base64 string
+		}
+	}
+
+	var idx = 0
+	function addKirim(){
+		var unitkerja = $('#select-unitkerja').select2('data')[0].text
+		var jabatan = $('#select-jabatan').select2('data')[0].text
+		var pegawai = $('#text-pegawai').val()
+		var redaksi = $('#select-redaksi').val()
+		idx++
+		var content = '';
+			content += 
+			`<tr id="kirim-${idx}">
+				<td>${arrKirim.length + 1}</td>
+				<td>${jabatan}</td>
+				<td>${pegawai}</td>
+				<td>${redaksi}</td>
+				<td><button type="button" class="btn" onclick="removeKirim(${idx})">Hapus</button></td>
+			</tr>
+			`
+
+		if(arrKirim.length == 0 ){
+			$('#table-kirim tbody').empty()
+		}
+		
+		arrKirim.push({idx, unitkerja, jabatan, pegawai, redaksi})
+
+		$('#table-kirim tbody').append(content)
+
+	}
+
+	function removeKirim(index){
+		$('#kirim-'+index).remove()
+
+		arrKirim = arrKirim.filter((e) => e.idx != index)
+		console.log(arrKirim.length);
+		if(arrKirim.length == 0){
+			var content = '';
+				content += 
+				`<tr>
+					<td colspan="4" class="text-center">Data Kosong</td>
+				</tr>`
+			$('#table-kirim tbody').append(content)
+		}
+	}
+
+	function removeFile(index){
+		$('#file-'+index).remove()
+
+		arrFile = arrFile.filter((e) => e != index)
+		console.log(arrFile.length);
+		if(arrFile.length == 0){
+			var content = '';
+				content += 
+				`<tr>
+					<td colspan="4" class="text-center">Data Kosong</td>
+				</tr>`
+			$('#table-file tbody').append(content)
+		}
+	}
+
+
+</script>
+
+</html>
